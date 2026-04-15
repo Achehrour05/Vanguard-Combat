@@ -1,0 +1,7 @@
+SPORTS_LIST = [
+  {"id": "mma", "name": "MMA", "fullName": "Mixed Martial Arts", "icon": "🥊", "color": "#e74c3c", "gradient": "linear-gradient(135deg, #e74c3c, #c0392b)", "description": "Mixed Martial Arts combines techniques from various combat sports."},
+  {"id": "boxing", "name": "Boxing", "fullName": "Boxing", "icon": "🥊", "color": "#f39c12", "gradient": "linear-gradient(135deg, #f39c12, #e67e22)", "description": "The sweet science — boxing is the art of punching, footwork, and ring generalship."},
+  {"id": "kickboxing", "name": "Kickboxing", "fullName": "Kickboxing", "icon": "🦵", "color": "#9b59b6", "gradient": "linear-gradient(135deg, #9b59b6, #8e44ad)", "description": "Kickboxing blends punches and kicks in a dynamic striking art that tests speed and power."},
+  {"id": "bjj", "name": "BJJ", "fullName": "Brazilian Jiu-Jitsu", "icon": "🥋", "color": "#2ecc71", "gradient": "linear-gradient(135deg, #2ecc71, #27ae60)", "description": "Brazilian Jiu-Jitsu focuses on submissions, chokes, and positional control."},
+  {"id": "wrestling", "name": "Wrestling", "fullName": "Wrestling", "icon": "🤼", "color": "#3498db", "gradient": "linear-gradient(135deg, #3498db, #2980b9)", "description": "Wrestling emphasizes takedowns, pins, and mat control."}
+]
