@@ -43,7 +43,7 @@ for legend_name, stats in LEGEND_RECORDS.items():
 def get_project_context():
     sports_str = ", ".join([s['name'] for s in SPORTS_LIST])
     skills_str = ", ".join([s['name'] for s in SKILLS_LIBRARY])
-    return f
+    return f"This platform covers combat sports like {sports_str} and key skills like {skills_str}."
 def load_real_model():
     global _tokenizer, _model
     if _model is not None:
