@@ -236,16 +236,19 @@ def fetch_external_sport_api(sport_id: str, start_index: int = 1) -> list:
                 "Canelo Alvarez", "Oleksandr Usyk", "Tyson Fury", "Anthony Joshua"
             ]
             for name in seed:
-                url = f"https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p={urllib.parse.quote(name)}"
-                res = requests.get(url, timeout=5).json()
-                if res and res.get("player"):
-                    p = res["player"][0]
-                    img = p.get("strCutout") or p.get("strThumb") or random.choice(FALLBACK_IMAGES["boxing"])
-                    f = generate_fighter_schema(p.get("strPlayer"), "boxing", img, idx)
-                    f["country"] = p.get("strNationality", "Global")
-                    f["weightClass"] = p.get("strTeam", "Heavyweight")
-                    fighters.append(f)
-                    idx += 1
+                try:
+                    url = f"https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p={urllib.parse.quote(name)}"
+                    res = requests.get(url, timeout=5).json()
+                    if res and res.get("player"):
+                        p = res["player"][0]
+                        img = p.get("strCutout") or p.get("strThumb") or random.choice(FALLBACK_IMAGES["boxing"])
+                        f = generate_fighter_schema(p.get("strPlayer"), "boxing", img, idx)
+                        f["country"] = p.get("strNationality", "Global")
+                        f["weightClass"] = p.get("strTeam", "Heavyweight")
+                        fighters.append(f)
+                        idx += 1
+                except Exception as fetch_err:
+                    print(f"Warning: Could not fetch boxing intel for {name}: {fetch_err}")
         elif sport_id in ["bjj", "wrestling"]:
             if sport_id == "bjj":
                 seed_data = [
@@ -291,14 +294,17 @@ def fetch_external_sport_api(sport_id: str, start_index: int = 1) -> list:
         elif sport_id == "kickboxing":
             seed = ["Rico Verhoeven", "Badr Hari", "Israel Adesanya", "Alex Pereira"]
             for name in seed:
-                url = f"https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p={urllib.parse.quote(name)}"
-                res = requests.get(url, timeout=5).json()
-                if res and res.get("player"):
-                    p = res["player"][0]
-                    img = p.get("strCutout") or p.get("strThumb") or random.choice(FALLBACK_IMAGES["kickboxing"])
-                    f = generate_fighter_schema(p.get("strPlayer"), "kickboxing", img, idx)
-                    fighters.append(f)
-                    idx += 1
+                try:
+                    url = f"https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p={urllib.parse.quote(name)}"
+                    res = requests.get(url, timeout=5).json()
+                    if res and res.get("player"):
+                        p = res["player"][0]
+                        img = p.get("strCutout") or p.get("strThumb") or random.choice(FALLBACK_IMAGES["kickboxing"])
+                        f = generate_fighter_schema(p.get("strPlayer"), "kickboxing", img, idx)
+                        fighters.append(f)
+                        idx += 1
+                except Exception as fetch_err:
+                    print(f"Warning: Could not fetch kickboxing intel for {name}: {fetch_err}")
     except Exception as e:
         print(f"Global Sport Fetch Error for {sport_id}: {e}")
         if not fighters:
