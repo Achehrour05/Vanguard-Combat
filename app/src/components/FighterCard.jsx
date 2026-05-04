@@ -4,6 +4,7 @@ import buchechaImg from "../assets/marcus_buchecha.jpg";
 import almeidaImg from "../assets/Marcus_Almeida.jpg";
 import craigJonesImg from "../assets/craig_jones.jpg";
 import kyleSnyderImg from "../assets/Kyle_Snyder.jpg";
+
 const ASSET_MAP = {
     "Marcus Buchecha": buchechaImg,
     "Marcus Almeida": almeidaImg,
@@ -11,9 +12,12 @@ const ASSET_MAP = {
     "Kyle Snyder": kyleSnyderImg,
     "Marcelo Garcia": null,
 };
+
 export default function FighterCard({ fighter, sportColor }) {
     const navigate = useNavigate();
-    const imageSrc = ASSET_MAP[fighter.name] || fighter.image_url || `https://via.placeholder.com/400x500?text=${encodeURIComponent(fighter.name)}`;
+    const fallbackBanner = "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80";
+    const imageSrc = ASSET_MAP[fighter.name] || fighter.image_url || fallbackBanner;
+
     return (
         <div
             className="animate-in"
@@ -46,7 +50,6 @@ export default function FighterCard({ fighter, sportColor }) {
                         borderRadius: '15px',
                         overflow: 'hidden',
                     }}>
-                        {}
                         <div style={{
                             position: 'absolute',
                             bottom: 0,
@@ -56,7 +59,6 @@ export default function FighterCard({ fighter, sportColor }) {
                             background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 40%, transparent 100%)',
                             pointerEvents: 'none',
                         }} />
-                        {}
                         <div style={{
                             display: 'flex',
                             justifyContent: 'space-between',
@@ -65,7 +67,7 @@ export default function FighterCard({ fighter, sportColor }) {
                             position: 'relative',
                             zIndex: 2,
                         }}>
-                            {fighter.ranking > 0 && (
+                            {fighter.ranking > 0 ? (
                                 <div style={{
                                     background: sportColor,
                                     color: '#fff',
@@ -79,15 +81,28 @@ export default function FighterCard({ fighter, sportColor }) {
                                 }}>
                                     #{fighter.ranking}
                                 </div>
+                            ) : (
+                                <div style={{
+                                    background: 'rgba(255,255,255,0.1)',
+                                    backdropFilter: 'blur(8px)',
+                                    color: '#e5e7eb',
+                                    fontFamily: "'Oswald', sans-serif",
+                                    fontWeight: 700,
+                                    fontSize: '0.85rem',
+                                    padding: '0.35rem 0.8rem',
+                                    borderRadius: '8px',
+                                    letterSpacing: '1px',
+                                    border: '1px solid rgba(255,255,255,0.15)',
+                                }}>
+                                    PRO
+                                </div>
                             )}
                         </div>
-                        {}
                         <div style={{
                             position: 'relative',
                             zIndex: 2,
                             padding: '1.5rem',
                         }}>
-                            {}
                             <div style={{
                                 fontFamily: "'Oswald', sans-serif",
                                 fontSize: '0.65rem',
@@ -100,7 +115,6 @@ export default function FighterCard({ fighter, sportColor }) {
                             }}>
                                 {fighter.weightClass}
                             </div>
-                            {}
                             <h3 style={{
                                 fontFamily: "'Oswald', sans-serif",
                                 fontSize: '2.5rem',
@@ -114,8 +128,7 @@ export default function FighterCard({ fighter, sportColor }) {
                             }}>
                                 {fighter.name}
                             </h3>
-                            {}
-                            {fighter.nickname !== "N/A" && (
+                            {fighter.nickname && fighter.nickname !== "N/A" && (
                                 <div style={{
                                     fontFamily: "'Oswald', sans-serif",
                                     fontSize: '0.85rem',
@@ -127,7 +140,6 @@ export default function FighterCard({ fighter, sportColor }) {
                                     "{fighter.nickname}"
                                 </div>
                             )}
-                            {}
                             <div style={{
                                 width: '40px',
                                 height: '3px',
@@ -135,7 +147,6 @@ export default function FighterCard({ fighter, sportColor }) {
                                 marginBottom: '1rem',
                                 borderRadius: '2px',
                             }} />
-                            {}
                             <div style={{
                                 display: 'flex',
                                 gap: '1.8rem',
@@ -192,7 +203,6 @@ export default function FighterCard({ fighter, sportColor }) {
                                         marginTop: '2px',
                                     }}>DRAWS</div>
                                 </div>
-                                {}
                                 <div style={{
                                     marginLeft: 'auto',
                                     display: 'flex',
