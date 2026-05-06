@@ -1,44 +1,87 @@
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Menu, X, Shield, Search } from "lucide-react";
+
 export default function Navbar() {
     const location = useLocation();
+    const [mobileOpen, setMobileOpen] = useState(false);
+
+    const navLinks = [
+        { name: "HOME", path: "/" },
+        { name: "MATCHUPS", path: "/matchups" },
+        { name: "FAMOUS FIGHTS", path: "/fights" },
+        { name: "THE ARSENAL", path: "/arsenal" },
+        { name: "POUND-FOR-POUND", path: "/rankings" },
+    ];
+
+    const isActive = (path) => {
+        if (path === "/" && location.pathname === "/") return true;
+        if (path !== "/" && location.pathname.startsWith(path)) return true;
+        return false;
+    };
+
     return (
-        <nav className="tnx-header" style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: '60px',
-            background: '#000',
-            zIndex: 9999,
-            display: 'grid',
-            gridTemplateColumns: '1fr auto 1fr',
-            alignItems: 'center',
-            padding: '0 4rem',
-            borderBottom: '1px solid rgba(255,255,255,0.1)',
-        }}>
-            <div className="tnx-nav-group">
-                <Link to="/" className="tnx-nav-link" style={{ textDecoration: 'none', color: '#fff' }}>HOME</Link>
-                <Link to="/matchups" className="tnx-nav-link" style={{ textDecoration: 'none', color: '#fff' }}>MATCHUPS</Link>
-                <Link to="/fights" className="tnx-nav-link" style={{ textDecoration: 'none', color: '#fff' }}>FAMOUS FIGHTS</Link>
-                <Link to="/arsenal" className="tnx-nav-link" style={{ textDecoration: 'none', color: '#fff' }}>THE ARSENAL</Link>
-                <Link to="/rankings" className="tnx-nav-link" style={{ textDecoration: 'none', color: '#fff' }}>POUND-FOR-POUND</Link>
-            </div>
-            <Link to="/" className="tnx-logo-center" style={{ textDecoration: 'none', margin: '0 auto', display: 'block' }}>
-                <svg viewBox="0 0 100 40" className="tnx-logo-svg" style={{ height: '32px' }}>
-                    <text x="0" y="30" fontSize="30" fontStyle="italic" fontWeight="900" fill="#fff" fontFamily="'Oswald', sans-serif">UFC</text>
-                </svg>
-            </Link>
-            <div className="tnx-nav-group" style={{ justifyContent: 'flex-end' }}>
-                <span className="tnx-nav-link" style={{ color: '#fff' }}>NEWS</span>
-                <span className="tnx-nav-link" style={{ color: '#fff' }}>WATCH</span>
-                <span className="tnx-nav-link" style={{ color: '#fff' }}>SHOP</span>
-                <div className="tnx-nav-link" style={{ fontSize: '1.2rem', marginLeft: '1rem', color: '#fff' }}>
-                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
+        <nav className="fixed top-0 left-0 right-0 h-16 bg-black/90 backdrop-blur-md z-50 border-b border-white/10 px-4 md:px-8">
+            <div className="max-w-7xl mx-auto h-full flex items-center justify-between">
+                {/* Brand Logo */}
+                <Link to="/" className="flex items-center gap-2 text-white font-black tracking-widest text-lg">
+                    <Shield className="w-5 h-5 text-red-500" />
+                    <span>VANGUARD<span className="text-red-500">.</span>COMBAT</span>
+                </Link>
+
+                {/* Desktop Navigation */}
+                <div className="hidden md:flex items-center gap-6">
+                    {navLinks.map((item) => (
+                        <Link
+                            key={item.path}
+                            to={item.path}
+                            className={`text-xs uppercase font-bold tracking-wider transition-colors duration-200 relative py-1 ${
+                                isActive(item.path)
+                                    ? "text-red-500 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-red-500"
+                                    : "text-gray-300 hover:text-white"
+                            }`}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                </div>
+
+                {/* Right quick tools & Mobile toggle */}
+                <div className="flex items-center gap-3">
+                    <Link
+                        to="/rankings"
+                        className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600/10 border border-red-500/30 text-red-400 text-xs font-semibold hover:bg-red-600/20 transition-all"
+                    >
+                        <span>LIVE P4P</span>
+                    </Link>
+
+                    <button
+                        onClick={() => setMobileOpen(!mobileOpen)}
+                        className="md:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5"
+                        aria-label="Toggle menu"
+                    >
+                        {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                    </button>
                 </div>
             </div>
+
+            {/* Mobile Dropdown */}
+            {mobileOpen && (
+                <div className="md:hidden bg-black/95 border-b border-white/10 px-6 py-4 space-y-3">
+                    {navLinks.map((item) => (
+                        <Link
+                            key={item.path}
+                            to={item.path}
+                            onClick={() => setMobileOpen(false)}
+                            className={`block py-2 text-sm font-semibold tracking-wider ${
+                                isActive(item.path) ? "text-red-500" : "text-gray-300 hover:text-white"
+                            }`}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
+                </div>
+            )}
         </nav>
     );
 }
