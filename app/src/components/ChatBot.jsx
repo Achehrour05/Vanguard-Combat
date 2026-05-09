@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ChatBot.css";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
+const SUGGESTIONS = [
+    "Tell me about Islam Makhachev",
+    "What is an Armbar?",
+    "Explain Usyk's footwork",
+    "How does the Jab work?"
+];
+
 const ChatBot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
@@ -8,25 +18,28 @@ const ChatBot = () => {
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef(null);
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
+
     useEffect(() => {
         if (isOpen) scrollToBottom();
     }, [messages, isOpen]);
-    const handleSend = async (e) => {
-        e.preventDefault();
-        if (!input.trim() || isLoading) return;
-        const userMsg = { role: "user", content: input };
+
+    const sendQuery = async (queryText) => {
+        if (!queryText.trim() || isLoading) return;
+        const userMsg = { role: "user", content: queryText };
         setMessages(prev => [...prev, userMsg]);
         setInput("");
         setIsLoading(true);
+
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/chat", {
+            const response = await fetch(`${API_BASE}/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    message: input,
+                    message: queryText,
                     history: messages
                 })
             });
@@ -42,10 +55,15 @@ const ChatBot = () => {
             setIsLoading(false);
         }
     };
+
+    const handleSend = async (e) => {
+        e.preventDefault();
+        await sendQuery(input);
+    };
+
     return (
         <div className={`chatbot-wrapper ${isOpen ? 'open' : ''}`}>
-            {}
-            <button className="chatbot-toggle" onClick={() => setIsOpen(!isOpen)}>
+            <button className="chatbot-toggle" onClick={() => setIsOpen(!isOpen)} aria-label="Toggle AI Advisor">
                 {isOpen ? (
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -60,7 +78,7 @@ const ChatBot = () => {
                     </div>
                 )}
             </button>
-            {}
+
             <div className="chatbot-window">
                 <header className="chatbot-header">
                     <div className="header-top">
@@ -69,6 +87,7 @@ const ChatBot = () => {
                     </div>
                     <h3>STRATEGIC INTEL</h3>
                 </header>
+
                 <div className="chatbot-messages">
                     {messages.map((msg, i) => (
                         <div key={i} className={`message-row ${msg.role}`}>
@@ -86,15 +105,30 @@ const ChatBot = () => {
                     )}
                     <div ref={messagesEndRef} />
                 </div>
+
+                {messages.length < 3 && !isLoading && (
+                    <div className="flex flex-wrap gap-1.5 p-2 bg-black/40 border-t border-white/5">
+                        {SUGGESTIONS.map((item, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => sendQuery(item)}
+                                className="text-[11px] text-gray-400 bg-white/5 hover:bg-white/10 hover:text-white px-2.5 py-1 rounded-full transition-colors border border-white/5 text-left"
+                            >
+                                {item}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
                 <form className="chatbot-input" onSubmit={handleSend}>
                     <input
                         type="text"
-                        placeholder="Analyze a style..."
+                        placeholder="Analyze a technique or fighter..."
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         disabled={isLoading}
                     />
-                    <button type="submit" disabled={isLoading}>
+                    <button type="submit" disabled={isLoading || !input.trim()} aria-label="Send Message">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="3">
                             <line x1="22" y1="2" x2="11" y2="13"></line>
                             <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -105,4 +139,5 @@ const ChatBot = () => {
         </div>
     );
 };
+
 export default ChatBot;
