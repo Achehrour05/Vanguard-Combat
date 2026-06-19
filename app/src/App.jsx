@@ -8,6 +8,7 @@ import FightsPage from "./pages/FightsPage";
 import MatchupsPage from "./pages/MatchupsPage";
 import SkillsPage from "./pages/SkillsPage";
 import RankingsPage from "./pages/RankingsPage";
+import FavoritesPage from "./pages/FavoritesPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ChatBot from "./components/ChatBot";
 import "./App.css";
@@ -27,6 +28,7 @@ function App() {
             <Route path="/arsenal" element={<SkillsPage />} />
             <Route path="/skills" element={<SkillsPage />} />
             <Route path="/rankings" element={<RankingsPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <ChatBot />
